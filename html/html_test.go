@@ -70,6 +70,7 @@ func TestHTML(t *testing.T) {
 		{`<a rel="noopener">`, `<a rel=noopener>`},
 		{`<a rel=" noopener  external ">`, `<a rel="noopener external">`},
 		{`<input accept="image/png, image/jpeg">`, `<input accept=image/png,image/jpeg>`},
+		{`<p></p></label>`, `<p></p></label>`}, // experimentally found
 
 		// increase coverage
 		{`<script style="css">js</script>`, `<script style=css>js</script>`},
@@ -114,6 +115,7 @@ func TestHTML(t *testing.T) {
 		{`a <picture> <img> </picture>b`, `a <picture><img> </picture>b`},
 		{`<input placeholder=" a " value=" b ">`, `<input placeholder=" a " value=" b ">`},
 		{`a <strike> b </strike> c`, `a <strike>b </strike>c`},
+		{`a <svg>`, `a <svg>`},
 
 		// from HTML Minifier
 		{`<DIV TITLE="blah">boo</DIV>`, `<div title=blah>boo</div>`},
@@ -378,6 +380,8 @@ func TestHTMLTemplates(t *testing.T) {
 		{`<button onclick=" alert( {{.Alert}} ) ">`, `<button onclick=" alert( {{.Alert}} ) ">`},
 		{`<select>{{ range . }}<option>{{ . }}{{ end }}</select>`, `<select>{{ range . }}<option>{{ . }}{{ end }}</select>`},
 		{`<p>Hello <code>{{""}}</code> there</p>`, `<p>Hello <code>{{""}}</code> there`},
+		{`<select><option>Default</option>{{range $i, $lang := .Languages}}<option>{{$lang}}</option>{{end}}</select>`, `<select><option>Default{{range $i, $lang := .Languages}}<option>{{$lang}}{{end}}</select>`},
+		{`<tr{{if .Deleted}} class="is-disabled"{{end}}>`, `<tr{{if .Deleted}} class="is-disabled"{{end}}>`},
 	}
 
 	m := minify.New()
