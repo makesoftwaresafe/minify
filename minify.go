@@ -153,6 +153,12 @@ func (m *M) AddFunc(mimetype string, minifier MinifierFunc) {
 // AddRegexp adds a minifier to the mimetype => function map (unsafe for concurrent use).
 func (m *M) AddRegexp(pattern *regexp.Regexp, minifier Minifier) {
 	m.mutex.Lock()
+	for i := range m.pattern {
+		if m.pattern[i].pattern.String() == pattern.String() {
+			m.pattern[i] = patternMinifier{pattern, minifier}
+			return
+		}
+	}
 	m.pattern = append(m.pattern, patternMinifier{pattern, minifier})
 	m.mutex.Unlock()
 }
@@ -160,6 +166,12 @@ func (m *M) AddRegexp(pattern *regexp.Regexp, minifier Minifier) {
 // AddFuncRegexp adds a minify function to the mimetype => function map (unsafe for concurrent use).
 func (m *M) AddFuncRegexp(pattern *regexp.Regexp, minifier MinifierFunc) {
 	m.mutex.Lock()
+	for i := range m.pattern {
+		if m.pattern[i].pattern.String() == pattern.String() {
+			m.pattern[i] = patternMinifier{pattern, minifier}
+			return
+		}
+	}
 	m.pattern = append(m.pattern, patternMinifier{pattern, minifier})
 	m.mutex.Unlock()
 }
