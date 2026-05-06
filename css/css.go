@@ -176,6 +176,7 @@ func (c *cssMinifier) minifyGrammar() {
 	for {
 		gt, _, data := c.p.Next()
 	Next:
+		fmt.Println(gt, string(data))
 		switch gt {
 		case css.ErrorGrammar:
 			if c.p.HasParseError() {
