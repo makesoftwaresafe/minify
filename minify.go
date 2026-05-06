@@ -156,6 +156,7 @@ func (m *M) AddRegexp(pattern *regexp.Regexp, minifier Minifier) {
 	for i := range m.pattern {
 		if m.pattern[i].pattern.String() == pattern.String() {
 			m.pattern[i] = patternMinifier{pattern, minifier}
+			m.mutex.Unlock()
 			return
 		}
 	}
@@ -169,6 +170,7 @@ func (m *M) AddFuncRegexp(pattern *regexp.Regexp, minifier MinifierFunc) {
 	for i := range m.pattern {
 		if m.pattern[i].pattern.String() == pattern.String() {
 			m.pattern[i] = patternMinifier{pattern, minifier}
+			m.mutex.Unlock()
 			return
 		}
 	}
